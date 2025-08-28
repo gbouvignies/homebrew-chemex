@@ -1,4 +1,6 @@
 class Chemex < Formula
+  include Language::Python::Virtualenv
+
   desc "NMR Chemical Exchange Analysis Tool"
   homepage "http://gbouvignies.github.io/ChemEx/"
   url "https://github.com/gbouvignies/ChemEx/archive/v2025.4.0.tar.gz"
@@ -9,7 +11,10 @@ class Chemex < Formula
   depends_on "python@3.12"
 
   def install
-    virtualenv_install_with_resources using: "python@3.12"
+    # Create a virtualenv in `libexec`
+    venv = virtualenv_create(libexec, "python3.12")
+    # Install the package and its dependencies
+    venv.pip_install_and_link buildpath
   end
 
   test do
