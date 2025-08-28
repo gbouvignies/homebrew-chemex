@@ -11,12 +11,13 @@ class Chemex < Formula
   depends_on "python@3.12"
 
   def install
-    # Create a virtualenv with pip
-    venv = virtualenv_create(libexec, "python3.12", without_pip: false)
-    # Install the package with all dependencies
-    venv.pip_install buildpath
+    # Create a virtualenv
+    venv = virtualenv_create(libexec, "python3.12")
+    # Install dependencies first, then the package
+    system libexec/"bin/python", "-c", "import ensurepip; ensurepip.bootstrap()"
+    system libexec/"bin/python", "-m", "pip", "install", buildpath
     # Link executable scripts
-    bin.install_symlink venv.root/"bin/chemex"
+    bin.install_symlink libexec/"bin/chemex"
   end
 
   test do
