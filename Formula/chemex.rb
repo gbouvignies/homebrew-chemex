@@ -13,11 +13,8 @@ class Chemex < Formula
   def install
     # Create a virtualenv in `libexec`
     venv = virtualenv_create(libexec, "python3.12")
-    # Install the package with all dependencies
-    system venv.python, "-m", "pip", "install", *std_pip_args(prefix: false), "."
-    # Create bin wrapper scripts
-    (bin/"chemex").write_env_script(venv.python.parent/"chemex",
-                                    PATH: "#{venv.python.parent}:#{ENV["PATH"]}")
+    # Install the package with all dependencies and link scripts
+    venv.pip_install_and_link buildpath
   end
 
   test do
